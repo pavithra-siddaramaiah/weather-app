@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
-const hbs = require('hbs')
+const hbs = require('hbs');
+const { DESTRUCTION } = require('dns');
 
 const app = express();
 
@@ -20,13 +21,14 @@ app.use(express.static(publicDirectory))
 app.get('', (req, res) => {
     res.render('index',{
         title: 'Weather App',
-        author: "abc"
+        details: "abc"
     })
 })
 
 app.get('/help', (req, res) => {
     res.render('help', {
-        title:'Help Page'
+        title:'Help Page',
+        details: 'Click here for more help'
     })
 })
 
@@ -41,6 +43,22 @@ app.get('/weather', (req, res) => {
     res.send({
         lattitude: 123,
         longitude: 456
+    })
+})
+
+app.get('/help/*', (req, res) => {
+    res.render('404',{
+        title: '404',
+        errorMessage: 'This page is not defined',
+        details: 'Go Back Home'
+    })
+})
+
+app.get('/*', (req, res) => {
+    res.render('404',{
+        title: '404',
+        errorMessage: 'Page not found',
+        details: 'Go Back Home'
     })
 })
 
