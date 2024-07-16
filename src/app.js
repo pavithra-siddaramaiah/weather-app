@@ -1,7 +1,8 @@
 const express = require('express')
 const path = require('path')
 const hbs = require('hbs');
-const { DESTRUCTION } = require('dns');
+const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
 
 const app = express();
 
@@ -40,9 +41,51 @@ res.render('about', {
 })
 
 app.get('/weather', (req, res) => {
+    address = req.query.address
+    if(!address){
+        return res.send({
+            error: 'Please provide the valid address inorder to look into the forecast'
+        })
+
+    } 
+    
+    geocode(address, (error, {lattitude, longitude}= {}) => {
+        if (error) {
+            return res.send({
+                error
+            })
+        }
+
+        forecast(lattitude,longitude, (error, {city, country}) => {
+            if (error) {
+                return res.send({
+                    error
+                })
+            }
+
+            res.send({
+                location: 'Lattide for '+address+' is '+lattitude+' and Longitude is '+longitude,
+                details: 'Country is '+country+' and the city is '+city
+            })
+           
+        })
+        
+        
+    })
+    
+    
+    
+})
+
+app.get('/products', (req, res) => {
+    console.log(req.query.search)
+    if(!req.query.search){
+         return res.send({
+            error: 'No search available for this request'
+        })
+    }
     res.send({
-        lattitude: 123,
-        longitude: 456
+        products: []
     })
 })
 
