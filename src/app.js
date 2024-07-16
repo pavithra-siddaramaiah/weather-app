@@ -52,14 +52,14 @@ app.get('/weather', (req, res) => {
     geocode(address, (error, {lattitude, longitude}= {}) => {
         if (error) {
             return res.send({
-                error
+                error: 'unable to find the match, try again'
             })
         }
 
         forecast(lattitude,longitude, (error, {city, country}) => {
             if (error) {
                 return res.send({
-                    error
+                    error: 'unable to find the match, try again'
                 })
             }
 
